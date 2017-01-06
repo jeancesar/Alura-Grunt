@@ -75,14 +75,40 @@ module.exports = function(grunt) {
 				},				
 				files: 'public/less/**/*.less', 
 				tasks: 'less:compilar'
+			},
+			js: {
+				options: {
+					event: ['changed']
+				},
+				files: 'public/js/**/*.js',
+				tasks: 'jshint:js'
+			}			
+		},
+		jshint: {
+			js: {
+				src: ['public/js/**/*.js']
 			}
-		}	
+		},
+		browserSync: {
+			public: {
+				bsFiles: {
+					src : ['public/**/*']
+				},
+				options: {
+					watchTask: true,
+					server: {
+						baseDir: "public"
+					}
+				}				
+			}
+		}
 	});
 
 	//registrando task para minificação
 	grunt.registerTask('minifica', ['useminPrepare', 'concat', 'uglify', 'cssmin', 'rev:imagens','rev:minificados', 'usemin', 'imagemin']);
 
 	grunt.registerTask('dist', ['clean', 'copy']); // Registrar novas tasks que chamam outras na sequência que definirmos
+	grunt.registerTask('server', ['browserSync', 'watch']);
 	grunt.registerTask('default', ['dist', 'minifica']);
 	
 	grunt.loadNpmTasks('grunt-contrib-copy');
@@ -96,4 +122,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-browser-sync');
 }
